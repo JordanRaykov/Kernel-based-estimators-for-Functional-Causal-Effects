@@ -1,56 +1,11 @@
-# **Kernel-based estimators for Functional Causal Effects**
+# -*- coding: utf-8 -*-
+"""
 
-This repository implements **kernel ridge regression**‐based estimators for **causal effects** when outcomes and/or covariates are **functional** (i.e., observations in an $L_2$ space over a $T$-dimensional grid). Our motivating application is **estimating causal effects** (e.g., average treatment effects, dose-response curves, heterogeneous effects) when the outcome variable is a **time series** or **curve**.
-
-In particular, the **operator-valued kernel** approach (proposed in our manuscript [arXiv:2503.05024](https://arxiv.org/abs/2503.05024)) allows the outcome itself to be an entire **function**. Meanwhile, for **scalar** outcomes, we leverage existing **kernel ridge regression** techniques (Singh, Xu, & Gretton, 2024) extended to causal inference. We also include an **elastic registration** module (using SRVF transforms) to optionally align functional data prior to estimation. The methods and theoretical guarantees are described in detail in [arXiv:2503.05024](https://arxiv.org/abs/2503.05024).
-
----
-
-## **Features**
-
-- **Kernel Ridge Regression** for causal effect estimation on **functional** or **scalar** outcomes.
-- **Operator-valued kernels** to model outcome curves as elements in function spaces.
-- **Binary or continuous treatment** options:
-  - Set `treatment="discrete"` for binary treatment
-  - Otherwise uses an RBF kernel to model continuous (dose) response
-- **Elastic registration** using Square Root Velocity Functions (SRVF)
-- **Confidence intervals** and **significance testing** under mild asymptotic assumptions
-- **Digital monitoring** data from the PD@Home validation study has been included and made publically available with this work in the folder ```data - PDHome```
-
----
-
-## **Supported Methods and References**
-
-- **Operator-valued kernel for functional outcomes:**
-  - Proposed in our manuscript: [arXiv:2503.05024](https://arxiv.org/abs/2503.05024)
-- **Scalar-output kernel ridge regression:**
-  - Singh, R., Xu, L., & Gretton, A. (2024). *Kernel methods for causal functions: dose, heterogeneous and incremental response curves.* Biometrika, 111(2), 497–516.
-- **Inverse Probability Weighting (IPW):**
-  - Imai, K., & Van Dyk, D. (2004). *Causal inference with general treatment regimes.* JASA.
-- **Doubly Robust Estimators:**
-  - Funk, M.J., et al. (2011). *Doubly robust estimation of causal effects.* American Journal of Epidemiology, 173(7).
-
----
-
-## **Installation**
-
-Clone the repository and install the dependencies:
-
-```bash
-git clone https://github.com/JordanRaykov/functional-causal-effects.git
-cd functional-causal-effects
-pip install -r requirements.txt
-```
-Further install ```fdasrsf```
-via 
-```bash
-pip install fdasrsf
-```
-## **Quick Start Example**
-
-We provide a demo comparing operator-valued kernel estimators **with and without** SRVF registration. Below is a minimal working example:
-
-```python
+Demo comparing operator-valued kernel with vs. without SRVF registration
+on a single simulated dataset (n=50). If you use this code or any part of it in your research, please cite the following paper:
+Raykov, Y.P., Luo, H., Strait, J.D. and KhudaBukhsh, W.R., 2025. Kernel-based estimators for functional causal effects. arXiv preprint arXiv:2503.05024.
+@author: Yordan P. Raykov
+"""
 
 import numpy as np
 from itertools import product
@@ -189,22 +144,6 @@ predictions_ate_srvf, predictions_cate_srvf = kernel_causal_estimator_srvf.predi
 est_diff_srvf = predictions_cate_srvf[:,1,:] - predictions_cate_srvf[:,0,:]
 mse_srvf = np.mean((est_diff_srvf - test_truth)**2)
 print(f"Operator-valued Kernel WITH SRVF registration, MSE on test set: {mse_srvf:.4f}")
-```
-## Usage Notes
-
-### Binary Treatments
-The default option (`treatment="discrete"`) estimates average and conditional effects for treated vs. untreated groups.
-
-### Continuous Treatments
-When `treatment != "discrete"`, the estimator uses an RBF kernel over treatment levels to estimate dose-response functions.
-
-### Elastic Registration
-To reduce phase variability, set `apply_srfv_Y=True` (or `apply_srfv_X=True`) to apply SRVF alignment on outcomes or covariates, respectively.
-
-## **Confidence intervals**
-We use built-in utilities (e.g., `delta_method_ci`, `test_zero_effect`) to construct asymptotic normal or chi-squared based intervals for  
-$\|\Delta\|_2$.
-```python
 
 # ---------------------------------------------------------
 # 5) Confidence intervals and significance of the effects
@@ -259,21 +198,4 @@ plt.ylabel("Predicted ATE")
 plt.title("SRVF Operator‐Valued Kernel – ATE over Time")
 plt.legend()
 plt.show()
-```
 
-## Citing This Work
-
-If you use this package for academic research, please cite:
-
-### Operator-Valued Kernel Estimators
-*Kernel-based estimators for functional causal effects*. arXiv:2503.05024
-### Parkinson@Home Validation study
-Evers, L.J., Raykov, Y.P., Krijthe, J.H., Silva de Lima, A.L., Badawy, R., Claes, K., Heskes, T.M., Little, M.A., Meinders, M.J. and Bloem, B.R. (2020). *Real-life gait performance as a digital biomarker for motor fluctuations: the Parkinson@ Home validation study*. **Journal of medical Internet research**, 22(10), p.e19068.
-
-### Scalar Kernel Ridge Regression for Causal Effects
-Singh, R., Xu, L., & Gretton, A. (2024). *Kernel methods for causal functions: dose, heterogeneous and incremental response curves*. **Biometrika**, 111(2), 497–516.
-
-### Classical Methods
-Imai, K., & Van Dyk, D. (2004). *Causal inference with general treatment regimes*. **Journal of the American Statistical Association**.
-
-Funk, M. J., et al. (2011). *Doubly robust estimation of causal effects*. **American Journal of Epidemiology**, 173(7).
