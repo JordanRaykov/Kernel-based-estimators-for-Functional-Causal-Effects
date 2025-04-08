@@ -37,9 +37,9 @@ In particular, the **operator-valued kernel** approach (proposed in our manuscri
 Clone the repository and install the dependencies:
 
 ```bash
-git clone https://github.com/JordanRaykov/functional-causal-effects.git
-cd functional-causal-effects
-pip install -r requirements.txt
+git clone https://github.com/JordanRaykov/Kernel-based estimators for Functional Causal Effects.git
+cd Kernel-based estimators for Functional Causal Effects
+
 ```
 Further install ```fdasrsf```
 via 
